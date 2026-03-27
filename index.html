@@ -1,0 +1,1029 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gain Staging Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0e0f11;
+    --bg2: #151619;
+    --bg3: #1c1d21;
+    --border: #2a2b30;
+    --border2: #35363d;
+    --text: #e2e3e8;
+    --text2: #9a9ba8;
+    --text3: #5c5d6e;
+    --accent: #4ade80;
+    --accent2: #22c55e;
+    --accent-dim: rgba(74,222,128,0.08);
+    --amber: #fbbf24;
+    --amber-dim: rgba(251,191,36,0.08);
+    --blue: #60a5fa;
+    --blue-dim: rgba(96,165,250,0.08);
+    --red: #f87171;
+    --red-dim: rgba(248,113,113,0.08);
+    --stage1: #a78bfa;
+    --stage2: #34d399;
+    --stage3: #fbbf24;
+    --stage4: #f87171;
+    --mono: 'IBM Plex Mono', monospace;
+    --sans: 'IBM Plex Sans', sans-serif;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 15px;
+    line-height: 1.75;
+    min-height: 100vh;
+  }
+
+  /* HEADER */
+  header {
+    border-bottom: 1px solid var(--border);
+    padding: 0 2rem;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(14,15,17,0.92);
+    backdrop-filter: blur(12px);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 56px;
+  }
+
+  .header-logo {
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--accent);
+    letter-spacing: 0.05em;
+    font-weight: 500;
+  }
+
+  nav {
+    display: flex;
+    gap: 0;
+  }
+
+  nav a {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text3);
+    text-decoration: none;
+    padding: 0 14px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    border-left: 1px solid var(--border);
+    letter-spacing: 0.04em;
+    transition: color 0.15s, background 0.15s;
+    text-transform: uppercase;
+  }
+  nav a:last-child { border-right: 1px solid var(--border); }
+  nav a:hover { color: var(--text); background: var(--bg2); }
+
+  /* LAYOUT */
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 2rem;
+  }
+
+  /* HERO */
+  .hero {
+    padding: 5rem 2rem 4rem;
+    max-width: 900px;
+    margin: 0 auto;
+    position: relative;
+  }
+
+  .hero-eyebrow {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .hero-eyebrow::before {
+    content: '';
+    display: inline-block;
+    width: 24px;
+    height: 1px;
+    background: var(--accent);
+  }
+
+  h1 {
+    font-family: var(--mono);
+    font-size: clamp(2rem, 5vw, 3.2rem);
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin-bottom: 1.5rem;
+  }
+
+  .hero-sub {
+    font-size: 16px;
+    color: var(--text2);
+    font-weight: 300;
+    max-width: 560px;
+    line-height: 1.7;
+  }
+
+  /* CHAIN DIAGRAM */
+  .chain {
+    margin: 3rem 0;
+    display: flex;
+    align-items: center;
+    gap: 0;
+    overflow-x: auto;
+    padding-bottom: 0.5rem;
+  }
+
+  .chain-node {
+    flex-shrink: 0;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 12px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 160px;
+    transition: border-color 0.2s;
+    text-decoration: none;
+  }
+
+  .chain-node:hover { border-color: var(--border2); }
+
+  .chain-node-num {
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .chain-node-name {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text);
+    font-weight: 500;
+  }
+
+  .chain-node-sub {
+    font-size: 11px;
+    color: var(--text3);
+    line-height: 1.4;
+  }
+
+  .chain-arrow {
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 4px;
+    gap: 3px;
+  }
+
+  .chain-arrow-line {
+    height: 1px;
+    width: 36px;
+    background: var(--border2);
+  }
+
+  .chain-arrow-label {
+    font-family: var(--mono);
+    font-size: 9px;
+    color: var(--text3);
+    letter-spacing: 0.05em;
+    white-space: nowrap;
+  }
+
+  .chain-arrow-head {
+    font-size: 14px;
+    color: var(--border2);
+    margin-left: -8px;
+    margin-top: -6px;
+    align-self: flex-end;
+  }
+
+  .s1 { color: var(--stage1); border-color: rgba(167,139,250,0.25); }
+  .s1:hover { border-color: rgba(167,139,250,0.5); }
+  .s2 { color: var(--stage2); border-color: rgba(52,211,153,0.25); }
+  .s2:hover { border-color: rgba(52,211,153,0.5); }
+  .s3 { color: var(--stage3); border-color: rgba(251,191,36,0.25); }
+  .s3:hover { border-color: rgba(251,191,36,0.5); }
+  .s4 { color: var(--stage4); border-color: rgba(248,113,113,0.25); }
+  .s4:hover { border-color: rgba(248,113,113,0.5); }
+
+  /* QUICK REF TABLE */
+  section { padding: 3rem 0; border-top: 1px solid var(--border); }
+
+  .section-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text3);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  h2 {
+    font-family: var(--mono);
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: var(--text);
+    letter-spacing: -0.01em;
+    margin-bottom: 1rem;
+  }
+
+  h3 {
+    font-family: var(--mono);
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: 0.75rem;
+    letter-spacing: 0.01em;
+  }
+
+  p { color: var(--text2); margin-bottom: 1rem; font-weight: 300; }
+
+  .table-wrap { overflow-x: auto; }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    font-family: var(--mono);
+  }
+
+  thead tr { border-bottom: 1px solid var(--border2); }
+
+  th {
+    text-align: left;
+    padding: 10px 14px;
+    color: var(--text3);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+
+  td {
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text2);
+    vertical-align: top;
+    line-height: 1.5;
+  }
+
+  td:first-child { color: var(--text); }
+  tr:last-child td { border-bottom: none; }
+
+  .stage-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    font-weight: 500;
+    padding: 3px 8px;
+    border-radius: 3px;
+    letter-spacing: 0.04em;
+  }
+
+  .pill-dot { width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; }
+
+  /* STAGE SECTIONS */
+  .stage-section {
+    scroll-margin-top: 70px;
+  }
+
+  .stage-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .stage-number {
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    padding: 6px 10px;
+    border-radius: 4px;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .stage-title-block {}
+
+  .stage-device {
+    font-family: var(--mono);
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: var(--text);
+    letter-spacing: -0.01em;
+    line-height: 1.2;
+    margin-bottom: 4px;
+  }
+
+  .stage-target {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text3);
+    letter-spacing: 0.04em;
+  }
+
+  .steps-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    margin-bottom: 1.5rem;
+  }
+
+  .steps-list li {
+    display: flex;
+    gap: 14px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+    align-items: flex-start;
+  }
+
+  .steps-list li:last-child { border-bottom: none; }
+
+  .step-num {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text3);
+    flex-shrink: 0;
+    margin-top: 2px;
+    width: 20px;
+    text-align: right;
+  }
+
+  .step-text {
+    color: var(--text2);
+    font-size: 14px;
+    font-weight: 300;
+    line-height: 1.65;
+  }
+
+  .step-text strong {
+    color: var(--text);
+    font-weight: 500;
+  }
+
+  /* CALLOUTS */
+  .callout {
+    border-radius: 6px;
+    padding: 16px 20px;
+    margin: 1.5rem 0;
+    border: 1px solid;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+
+  .callout-icon {
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    flex-shrink: 0;
+    margin-top: 2px;
+    padding: 2px 6px;
+    border-radius: 2px;
+  }
+
+  .callout-text { font-size: 13.5px; font-weight: 300; line-height: 1.65; }
+
+  .callout-important {
+    background: var(--blue-dim);
+    border-color: rgba(96,165,250,0.2);
+  }
+  .callout-important .callout-icon { background: var(--blue-dim); color: var(--blue); }
+  .callout-important .callout-text { color: #93c5fd; }
+
+  .callout-tip {
+    background: var(--accent-dim);
+    border-color: rgba(74,222,128,0.2);
+  }
+  .callout-tip .callout-icon { background: var(--accent-dim); color: var(--accent); }
+  .callout-tip .callout-text { color: #86efac; }
+
+  .callout-warning {
+    background: var(--amber-dim);
+    border-color: rgba(251,191,36,0.2);
+  }
+  .callout-warning .callout-icon { background: var(--amber-dim); color: var(--amber); }
+  .callout-warning .callout-text { color: #fcd34d; }
+
+  /* CALIBRATION WORKFLOW */
+  .workflow-grid {
+    display: grid;
+    gap: 2px;
+  }
+
+  .workflow-step {
+    display: grid;
+    grid-template-columns: 48px 1fr;
+    gap: 0;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+
+  .workflow-step:hover { border-color: var(--border2); }
+
+  .workflow-step-num {
+    background: var(--bg3);
+    border-right: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text3);
+  }
+
+  .workflow-step-content {
+    padding: 14px 18px;
+    font-size: 14px;
+    font-weight: 300;
+    color: var(--text2);
+    line-height: 1.65;
+  }
+
+  .workflow-step-content strong { color: var(--text); font-weight: 500; }
+
+  /* TROUBLESHOOT */
+  .trouble-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .trouble-item {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    overflow: hidden;
+    background: var(--bg2);
+  }
+
+  .trouble-problem {
+    background: var(--bg3);
+    border-right: 1px solid var(--border);
+    padding: 14px 18px;
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text);
+    line-height: 1.5;
+    display: flex;
+    align-items: center;
+  }
+
+  .trouble-fix {
+    padding: 14px 18px;
+    font-size: 13.5px;
+    color: var(--text2);
+    font-weight: 300;
+    line-height: 1.65;
+    display: flex;
+    align-items: center;
+  }
+
+  .trouble-fix strong { color: var(--text); font-weight: 500; }
+
+  /* BULLETS */
+  ul.detail-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin: 1rem 0;
+  }
+
+  ul.detail-list li {
+    display: flex;
+    gap: 10px;
+    font-size: 14px;
+    color: var(--text2);
+    font-weight: 300;
+    line-height: 1.65;
+    align-items: flex-start;
+  }
+
+  ul.detail-list li::before {
+    content: '—';
+    color: var(--text3);
+    flex-shrink: 0;
+    font-family: var(--mono);
+    font-size: 12px;
+    margin-top: 2px;
+  }
+
+  ul.detail-list li strong { color: var(--text); font-weight: 500; }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 2rem;
+    text-align: center;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text3);
+    letter-spacing: 0.06em;
+  }
+
+  /* LEVEL METER VISUAL */
+  .meter-visual {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 6px;
+  }
+
+  .meter-bar {
+    flex: 1;
+    height: 4px;
+    background: var(--bg3);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .meter-fill {
+    height: 100%;
+    border-radius: 2px;
+    transition: width 0.3s;
+  }
+
+  .meter-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text3);
+    white-space: nowrap;
+  }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .hero { animation: fadeUp 0.5s ease both; }
+  .chain { animation: fadeUp 0.5s ease 0.1s both; }
+
+  @media (max-width: 640px) {
+    nav { display: none; }
+    .trouble-item { grid-template-columns: 1fr; }
+    .trouble-problem { border-right: none; border-bottom: 1px solid var(--border); }
+    h1 { font-size: 1.8rem; }
+    .stage-header { flex-direction: column; gap: 0.75rem; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <span class="header-logo">// gain-staging-guide</span>
+  <nav>
+    <a href="#quick-ref">Reference</a>
+    <a href="#stage1">Stage 1</a>
+    <a href="#stage2">Stage 2</a>
+    <a href="#stage3">Stage 3</a>
+    <a href="#stage4">Stage 4</a>
+    <a href="#calibration">Calibration</a>
+    <a href="#troubleshooting">Troubleshoot</a>
+  </nav>
+</header>
+
+<div class="hero">
+  <div class="hero-eyebrow">Signal chain documentation</div>
+  <h1>Gain Staging<br>Guide</h1>
+  <p class="hero-sub">A step-by-step reference for managing signal levels through your Eurorack → Zoom LiveTrak L6 → Apollo Twin Duo X chain.</p>
+
+  <div class="chain">
+    <a class="chain-node s1" href="#stage1">
+      <span class="chain-node-num">01</span>
+      <span class="chain-node-name">Eurorack Mixer</span>
+      <span class="chain-node-sub">±5V–10V modular level</span>
+    </a>
+    <div class="chain-arrow">
+      <div class="chain-arrow-label">modular</div>
+      <div style="display:flex;align-items:center;">
+        <div class="chain-arrow-line"></div>
+        <span style="color:var(--border2);font-size:12px;margin-left:-1px;">›</span>
+      </div>
+    </div>
+    <a class="chain-node s2" href="#stage2">
+      <span class="chain-node-num">02</span>
+      <span class="chain-node-name">Line Out Module</span>
+      <span class="chain-node-sub">Converts to +4 dBu line</span>
+    </a>
+    <div class="chain-arrow">
+      <div class="chain-arrow-label">line level</div>
+      <div style="display:flex;align-items:center;">
+        <div class="chain-arrow-line"></div>
+        <span style="color:var(--border2);font-size:12px;margin-left:-1px;">›</span>
+      </div>
+    </div>
+    <a class="chain-node s3" href="#stage3">
+      <span class="chain-node-num">03</span>
+      <span class="chain-node-name">Zoom LiveTrak L6</span>
+      <span class="chain-node-sub">Stereo in → stereo out</span>
+    </a>
+    <div class="chain-arrow">
+      <div class="chain-arrow-label">line level</div>
+      <div style="display:flex;align-items:center;">
+        <div class="chain-arrow-line"></div>
+        <span style="color:var(--border2);font-size:12px;margin-left:-1px;">›</span>
+      </div>
+    </div>
+    <a class="chain-node s4" href="#stage4">
+      <span class="chain-node-num">04</span>
+      <span class="chain-node-name">Apollo Twin Duo X</span>
+      <span class="chain-node-sub">UA Console → Mac Studio</span>
+    </a>
+  </div>
+
+  <p style="font-size:13px; color: var(--text3);">The golden rule: fix gain problems at the source. If a signal is too quiet at the Apollo, go back upstream — don't boost it there.</p>
+</div>
+
+<div class="container">
+
+  <!-- QUICK REF -->
+  <section id="quick-ref" class="stage-section">
+    <div class="section-label">Quick reference</div>
+    <h2>Level targets at a glance</h2>
+    <p>Use this table as your cheat sheet when setting up or troubleshooting levels.</p>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Stage</th>
+            <th>Device</th>
+            <th>Target level</th>
+            <th>How to measure</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="stage-pill" style="background:rgba(167,139,250,0.1);color:var(--stage1);border:1px solid rgba(167,139,250,0.2)"><span class="pill-dot" style="background:var(--stage1)"></span>01</span></td>
+            <td>Eurorack mixer</td>
+            <td>No clipping; healthy peaks</td>
+            <td>Mordax Data oscilloscope mode</td>
+          </tr>
+          <tr>
+            <td><span class="stage-pill" style="background:rgba(52,211,153,0.1);color:var(--stage2);border:1px solid rgba(52,211,153,0.2)"><span class="pill-dot" style="background:var(--stage2)"></span>02</span></td>
+            <td>Line out module</td>
+            <td>+4 dBu / ~1.23V RMS</td>
+            <td>Mordax Data or AC multimeter</td>
+          </tr>
+          <tr>
+            <td><span class="stage-pill" style="background:rgba(251,191,36,0.1);color:var(--stage3);border:1px solid rgba(251,191,36,0.2)"><span class="pill-dot" style="background:var(--stage3)"></span>03</span></td>
+            <td>Zoom LiveTrak L6</td>
+            <td>Peaks at −12 to −6 dBFS</td>
+            <td>Built-in channel meters on L6</td>
+          </tr>
+          <tr>
+            <td><span class="stage-pill" style="background:rgba(248,113,113,0.1);color:var(--stage4);border:1px solid rgba(248,113,113,0.2)"><span class="pill-dot" style="background:var(--stage4)"></span>04</span></td>
+            <td>Apollo Twin Duo X</td>
+            <td>Avg −18 dBFS, peaks to −6 dBFS</td>
+            <td>UA Console + DAW meter plugin</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- STAGE 1 -->
+  <section id="stage1" class="stage-section">
+    <div class="section-label">Stage 01</div>
+    <div class="stage-header">
+      <div class="stage-number" style="background:rgba(167,139,250,0.1);color:var(--stage1);border:1px solid rgba(167,139,250,0.25)">01</div>
+      <div class="stage-title-block">
+        <div class="stage-device">Eurorack Mixer</div>
+        <div class="stage-target">Target: clean output, no clipping on mixer meters</div>
+      </div>
+    </div>
+
+    <p>Modular signals run hot — roughly ±5V to ±10V — far louder than standard line level. Your job here is to keep the mixer's output clean before the signal hits the converter module. Everything downstream depends on getting this right.</p>
+
+    <h3>Steps</h3>
+    <ol class="steps-list">
+      <li>
+        <span class="step-num">1</span>
+        <span class="step-text">Play your patch at a <strong>typical session volume</strong> — the level you'd actually use, not a test tone.</span>
+      </li>
+      <li>
+        <span class="step-num">2</span>
+        <span class="step-text">Watch the mixer's <strong>output meters</strong> while your patch runs. Peaks should be healthy but not hitting the ceiling.</span>
+      </li>
+      <li>
+        <span class="step-num">3</span>
+        <span class="step-text">Adjust individual <strong>channel levels</strong> and the <strong>master output</strong> so you have headroom to spare.</span>
+      </li>
+      <li>
+        <span class="step-num">4</span>
+        <span class="step-text">If your mixer has a <strong>master output trim or attenuator</strong>, use it to tame the signal before it exits the rack — better to attenuate here than boost later.</span>
+      </li>
+    </ol>
+
+    <h3>Measuring with the Mordax Data</h3>
+    <p>Patch your mixer's stereo output into two inputs on the Mordax Data before it reaches the line out module.</p>
+    <ul class="detail-list">
+      <li>In <strong>oscilloscope mode</strong>, look at the peak voltage. A healthy Eurorack output runs around <strong>±5V peak</strong>.</li>
+      <li>If the waveform is <strong>flat-topped</strong> at the top or bottom, you are clipping — reduce the mixer output immediately.</li>
+      <li>Use <strong>VU/meter mode</strong> on the Mordax Data for a time-averaged read rather than just instantaneous peaks.</li>
+    </ul>
+
+    <div class="callout callout-important">
+      <span class="callout-icon">Note</span>
+      <span class="callout-text">The Mordax Data inputs are designed for Eurorack-level signals (±5V to ±10V). Only use it on the Eurorack side of your chain — before the line out module converts the signal to line level. Readings after the converter will be inaccurate.</span>
+    </div>
+  </section>
+
+  <!-- STAGE 2 -->
+  <section id="stage2" class="stage-section">
+    <div class="section-label">Stage 02</div>
+    <div class="stage-header">
+      <div class="stage-number" style="background:rgba(52,211,153,0.1);color:var(--stage2);border:1px solid rgba(52,211,153,0.25)">02</div>
+      <div class="stage-title-block">
+        <div class="stage-device">Line Out Module</div>
+        <div class="stage-target">Target: +4 dBu output / ~1.23V RMS</div>
+      </div>
+    </div>
+
+    <p>Your line out converter module steps the Eurorack-level signal down to a standard line level. This is the most critical translation point in your chain — the signal crosses from the modular world into the pro audio world here.</p>
+
+    <h3>Steps</h3>
+    <ol class="steps-list">
+      <li>
+        <span class="step-num">1</span>
+        <span class="step-text">Check whether your module has a <strong>level switch or trim pot</strong>. Set it to <strong>+4 dBu output</strong> if available — this is the better choice for the Zoom L6.</span>
+      </li>
+      <li>
+        <span class="step-num">2</span>
+        <span class="step-text">If your module only outputs <strong>−10 dBV (consumer level)</strong>, it will still work — you'll just need slightly more input gain on the Zoom.</span>
+      </li>
+      <li>
+        <span class="step-num">3</span>
+        <span class="step-text">Play your patch and <strong>listen carefully</strong> for any distortion introduced at this stage. If the module is being overdriven, reduce the mixer output from Stage 1.</span>
+      </li>
+    </ol>
+
+    <h3>Measuring the output</h3>
+    <ul class="detail-list">
+      <li>Use a <strong>multimeter set to AC voltage</strong> on the module's output jacks. A +4 dBu signal reads approximately <strong>1.23V RMS</strong>.</li>
+      <li>The Mordax Data can be used here if the module outputs at Eurorack-compatible voltage, but once converted to true line level the readings will be low.</li>
+      <li>The most practical check is to <strong>watch the Zoom L6's input meters</strong> in the next stage and work backwards if levels seem off.</li>
+    </ul>
+
+    <div class="callout callout-tip">
+      <span class="callout-icon">Tip</span>
+      <span class="callout-text">If you have a choice between +4 dBu and −10 dBV on your module, always use +4 dBu when feeding the Zoom L6. The higher level means a better signal-to-noise ratio and a more robust signal through the cable run.</span>
+    </div>
+  </section>
+
+  <!-- STAGE 3 -->
+  <section id="stage3" class="stage-section">
+    <div class="section-label">Stage 03</div>
+    <div class="stage-header">
+      <div class="stage-number" style="background:rgba(251,191,36,0.1);color:var(--stage3);border:1px solid rgba(251,191,36,0.25)">03</div>
+      <div class="stage-title-block">
+        <div class="stage-device">Zoom LiveTrak L6</div>
+        <div class="stage-target">Target: peaks at −12 to −6 dBFS, faders at unity</div>
+      </div>
+    </div>
+
+    <p>The Zoom LiveTrak L6 receives your stereo line-level signal and routes it to its outputs. Your goal here is to set the input trim so the Zoom's converters are working in their optimal range, then pass the signal through cleanly with faders at unity.</p>
+
+    <div style="margin: 1.5rem 0; padding: 16px 20px; background: var(--bg2); border: 1px solid var(--border); border-radius: 6px;">
+      <div style="font-family:var(--mono);font-size:10px;color:var(--text3);margin-bottom:12px;letter-spacing:0.08em;text-transform:uppercase;">Target meter range</div>
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <div>
+          <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
+            <span style="font-family:var(--mono);font-size:11px;color:var(--text2)">Too quiet (below −20 dBFS)</span>
+            <span style="font-family:var(--mono);font-size:11px;color:var(--red)">fix upstream</span>
+          </div>
+          <div class="meter-bar"><div class="meter-fill" style="width:20%;background:var(--text3)"></div></div>
+        </div>
+        <div>
+          <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
+            <span style="font-family:var(--mono);font-size:11px;color:var(--text2)">Target zone (−12 to −6 dBFS)</span>
+            <span style="font-family:var(--mono);font-size:11px;color:var(--accent)">✓ good</span>
+          </div>
+          <div class="meter-bar"><div class="meter-fill" style="width:72%;background:var(--accent)"></div></div>
+        </div>
+        <div>
+          <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
+            <span style="font-family:var(--mono);font-size:11px;color:var(--text2)">Clipping (0 dBFS)</span>
+            <span style="font-family:var(--mono);font-size:11px;color:var(--red)">reduce gain</span>
+          </div>
+          <div class="meter-bar"><div class="meter-fill" style="width:100%;background:var(--red)"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <h3>Steps</h3>
+    <ol class="steps-list">
+      <li>
+        <span class="step-num">1</span>
+        <span class="step-text">Connect your line out module's stereo output to the <strong>stereo line input</strong> on the Zoom L6.</span>
+      </li>
+      <li>
+        <span class="step-num">2</span>
+        <span class="step-text">Play your patch and watch the <strong>input channel meter</strong> on the L6.</span>
+      </li>
+      <li>
+        <span class="step-num">3</span>
+        <span class="step-text">Adjust the <strong>input trim (gain knob)</strong> on the stereo channel so peaks land between <strong>−12 and −6 dBFS</strong> — the green/yellow region on the meter.</span>
+      </li>
+      <li>
+        <span class="step-num">4</span>
+        <span class="step-text">Set the <strong>channel fader to unity</strong> (the 0 or U position). Do not use the fader to compensate for a weak signal — fix it upstream.</span>
+      </li>
+      <li>
+        <span class="step-num">5</span>
+        <span class="step-text">Set the <strong>master output fader to unity</strong> as well and confirm the output meters match what you expect.</span>
+      </li>
+    </ol>
+
+    <div class="callout callout-warning">
+      <span class="callout-icon">Heads up</span>
+      <span class="callout-text">Leave headroom for dynamics. Modular synthesis can produce sudden loud transients that your average level won't predict. Keeping peaks at −12 to −6 dBFS means a sudden spike will reach around −6 dBFS rather than clipping at 0.</span>
+    </div>
+  </section>
+
+  <!-- STAGE 4 -->
+  <section id="stage4" class="stage-section">
+    <div class="section-label">Stage 04</div>
+    <div class="stage-header">
+      <div class="stage-number" style="background:rgba(248,113,113,0.1);color:var(--stage4);border:1px solid rgba(248,113,113,0.25)">04</div>
+      <div class="stage-title-block">
+        <div class="stage-device">Apollo Twin Duo X</div>
+        <div class="stage-target">Target: avg −18 dBFS, peaks no higher than −6 dBFS</div>
+      </div>
+    </div>
+
+    <p>The Apollo Twin Duo X is your final recording stage. By the time signal arrives here it should already be well-leveled from upstream. The Apollo's job is to convert the signal accurately — not to add significant gain.</p>
+
+    <h3>Steps</h3>
+    <ol class="steps-list">
+      <li>
+        <span class="step-num">1</span>
+        <span class="step-text">Connect the Zoom LiveTrak L6's main output to the <strong>Apollo Twin Duo X's line inputs</strong>.</span>
+      </li>
+      <li>
+        <span class="step-num">2</span>
+        <span class="step-text">Open <strong>Universal Audio Console</strong> on your Mac Studio.</span>
+      </li>
+      <li>
+        <span class="step-num">3</span>
+        <span class="step-text">Play your patch and watch the <strong>input channel meter in Console</strong>.</span>
+      </li>
+      <li>
+        <span class="step-num">4</span>
+        <span class="step-text">Set the Apollo's input gain so <strong>average program level sits around −18 dBFS</strong>, with peaks approaching −6 dBFS on louder moments.</span>
+      </li>
+      <li>
+        <span class="step-num">5</span>
+        <span class="step-text">In your DAW, add a <strong>meter plugin as an insert</strong> on the input track for a detailed read. Free options: MeldaProduction MFAQ, or your DAW's stock meters.</span>
+      </li>
+    </ol>
+
+    <h3>DAW metering tips</h3>
+    <ul class="detail-list">
+      <li>Place the meter <strong>before any processing</strong> on the input channel — you want to see the raw signal.</li>
+      <li>Aim for an <strong>average RMS level around −18 to −14 dBFS</strong>. This is the digital sweet spot for 24-bit recording.</li>
+      <li>Enable <strong>true peak mode</strong> if your meter supports it — it catches intersample peaks that standard peak metering misses.</li>
+    </ul>
+
+    <div class="callout callout-tip">
+      <span class="callout-icon">Tip</span>
+      <span class="callout-text">The Apollo Twin Duo X has excellent converters — trust them. If you find yourself cranking the Apollo's input gain to compensate for a weak signal, that is a sign something is too quiet upstream. Go back and fix it at Stage 1 or 2.</span>
+    </div>
+  </section>
+
+  <!-- CALIBRATION -->
+  <section id="calibration" class="stage-section">
+    <div class="section-label">Calibration workflow</div>
+    <h2>Full chain setup</h2>
+    <p>Run this process at the start of each session, or any time you make changes to your rack. Uses a test tone to take the guesswork out of level setting.</p>
+
+    <h3 style="margin-bottom:1rem;">What you need</h3>
+    <ul class="detail-list" style="margin-bottom:1.5rem;">
+      <li>A <strong>sustained test tone</strong> — a 1kHz sine wave from an oscillator module at a typical session level</li>
+      <li>The <strong>Mordax Data</strong> in your rack</li>
+      <li>The <strong>Zoom LiveTrak L6</strong> powered and connected</li>
+      <li><strong>UA Console</strong> open on your Mac Studio</li>
+    </ul>
+
+    <div class="workflow-grid">
+      <div class="workflow-step">
+        <div class="workflow-step-num">1</div>
+        <div class="workflow-step-content">Patch your oscillator into the Eurorack mixer at a level typical for your sessions. Set it to a <strong>sustained 1kHz sine tone</strong>.</div>
+      </div>
+      <div class="workflow-step">
+        <div class="workflow-step-num">2</div>
+        <div class="workflow-step-content">Patch the mixer output into the <strong>Mordax Data</strong>. In oscilloscope mode, confirm a clean sine wave with peaks around <strong>±5V</strong>. No flat-topping.</div>
+      </div>
+      <div class="workflow-step">
+        <div class="workflow-step-num">3</div>
+        <div class="workflow-step-content">Patch the mixer output into your <strong>line out module</strong>. Adjust the module's trim so it outputs <strong>+4 dBu</strong> if possible (verify with a multimeter: ~1.23V RMS).</div>
+      </div>
+      <div class="workflow-step">
+        <div class="workflow-step-num">4</div>
+        <div class="workflow-step-content">Watch the <strong>Zoom LiveTrak L6's input meter</strong>. Adjust the L6's input trim until the tone reads around <strong>−12 dBFS</strong>. Set channel and master faders to unity.</div>
+      </div>
+      <div class="workflow-step">
+        <div class="workflow-step-num">5</div>
+        <div class="workflow-step-content">Open <strong>UA Console</strong> and confirm the signal arriving at the Apollo is around <strong>−18 to −12 dBFS</strong> for a sustained tone.</div>
+      </div>
+      <div class="workflow-step">
+        <div class="workflow-step-num">6</div>
+        <div class="workflow-step-content">Open your <strong>DAW</strong> and confirm the input track meter matches Console. Place a meter plugin before any processing inserts.</div>
+      </div>
+      <div class="workflow-step">
+        <div class="workflow-step-num">7</div>
+        <div class="workflow-step-content">Replace the test tone with your <strong>actual patch</strong>. Play a typical passage and confirm nothing clips at any stage. You're done.</div>
+      </div>
+    </div>
+
+    <div class="callout callout-warning" style="margin-top:1.5rem;">
+      <span class="callout-icon">Remember</span>
+      <span class="callout-text">Gain staging is not a one-time setup. Revisit it any time you significantly change your patch, add new modules, or change routing through your rack. A patch that was well-leveled with one configuration may clip with another.</span>
+    </div>
+  </section>
+
+  <!-- TROUBLESHOOTING -->
+  <section id="troubleshooting" class="stage-section">
+    <div class="section-label">Troubleshooting</div>
+    <h2>Common problems</h2>
+    <p>If something sounds off, start here before adjusting anything downstream.</p>
+
+    <div class="trouble-grid">
+      <div class="trouble-item">
+        <div class="trouble-problem">Signal clipping on the Zoom L6 meters</div>
+        <div class="trouble-fix">Reduce the <strong>line out module's trim</strong>, or lower the Eurorack mixer's output level. Do not reduce the L6's input trim as a first resort — fix it upstream.</div>
+      </div>
+      <div class="trouble-item">
+        <div class="trouble-problem">Signal too quiet at the Apollo</div>
+        <div class="trouble-fix">Increase the level at <strong>Stage 1</strong> (mixer output) or <strong>Stage 2</strong> (line out module trim). Do not over-boost the Apollo's input gain to compensate.</div>
+      </div>
+      <div class="trouble-item">
+        <div class="trouble-problem">Flat-topped waveform on Mordax Data</div>
+        <div class="trouble-fix">You are clipping <strong>in the Eurorack</strong>. Reduce channel levels or the mixer's master output before the signal leaves the rack.</div>
+      </div>
+      <div class="trouble-item">
+        <div class="trouble-problem">Noise or hiss audible in the signal</div>
+        <div class="trouble-fix">Check that the line out module is set to <strong>+4 dBu</strong> (not −10 dBV). Also confirm the Zoom L6 input trim is not set too high — excessive input gain adds noise.</div>
+      </div>
+      <div class="trouble-item">
+        <div class="trouble-problem">Levels inconsistent between sessions</div>
+        <div class="trouble-fix">Run the <strong>calibration workflow</strong> with a test tone at the start of each session to confirm levels have not drifted between patch changes.</div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  Eurorack → Line Out → Zoom LiveTrak L6 → Apollo Twin Duo X &nbsp;·&nbsp; gain-staging-guide
+</footer>
+
+</body>
+</html>
