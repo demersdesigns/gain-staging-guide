@@ -715,8 +715,8 @@
           <tr>
             <td><span class="stage-pill" style="background:rgba(251,191,36,0.1);color:var(--stage3);border:1px solid rgba(251,191,36,0.2)"><span class="pill-dot" style="background:var(--stage3)"></span>03</span></td>
             <td>Zoom LiveTrak L6</td>
-            <td>Peaks at −12 to −6 dBFS</td>
-            <td>Built-in channel meters on L6</td>
+            <td>Healthy on master LED meter; peaks −12 to −6 dBFS at Apollo input</td>
+            <td>Stereo LED bar meter (right side of L6) + UA Console</td>
           </tr>
           <tr>
             <td><span class="stage-pill" style="background:rgba(248,113,113,0.1);color:var(--stage4);border:1px solid rgba(248,113,113,0.2)"><span class="pill-dot" style="background:var(--stage4)"></span>04</span></td>
@@ -825,35 +825,34 @@
       <div class="stage-number" style="background:rgba(251,191,36,0.1);color:var(--stage3);border:1px solid rgba(251,191,36,0.25)">03</div>
       <div class="stage-title-block">
         <div class="stage-device">Zoom LiveTrak L6</div>
-        <div class="stage-target">Target: peaks at −12 to −6 dBFS, faders at unity</div>
+        <div class="stage-target">Target: healthy signal on channel meter, Master knob at comfortable output level</div>
       </div>
     </div>
 
-    <p>The Zoom LiveTrak L6 receives your stereo line-level signal and routes it to its outputs. Your goal here is to set the input trim so the Zoom's converters are working in their optimal range, then pass the signal through cleanly with faders at unity.</p>
+    <p>The L6 uses 32-bit float recording, which means its analog-to-digital converters handle a wide range of input levels without clipping — the device automatically switches between high and low gain preamp circuits as needed. There are no traditional gain knobs or faders. Instead, each channel has a <strong>rotary encoder</strong> that controls the channel level by default, and the master output is controlled by a fixed-position <strong>Master knob</strong> on the right side of the unit.</p>
 
     <div style="margin: 1.5rem 0; padding: 16px 20px; background: var(--bg2); border: 1px solid var(--border); border-radius: 6px;">
-      <div style="font-family:var(--mono);font-size:10px;color:var(--text3);margin-bottom:12px;letter-spacing:0.08em;text-transform:uppercase;">Target meter range</div>
-      <div style="display:flex;flex-direction:column;gap:8px;">
-        <div>
-          <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
-            <span style="font-family:var(--mono);font-size:11px;color:var(--text2)">Too quiet (below −20 dBFS)</span>
-            <span style="font-family:var(--mono);font-size:11px;color:var(--red)">fix upstream</span>
-          </div>
-          <div class="meter-bar"><div class="meter-fill" style="width:20%;background:var(--text3)"></div></div>
+      <div style="font-family:var(--mono);font-size:10px;color:var(--text3);margin-bottom:14px;letter-spacing:0.08em;text-transform:uppercase;">Key controls on the L6</div>
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div style="display:grid;grid-template-columns:160px 1fr;gap:12px;align-items:start;">
+          <span style="font-family:var(--mono);font-size:12px;font-weight:500;color:var(--amber)">Channel encoder</span>
+          <span style="font-size:13px;color:var(--text2);font-weight:300;">Rotary encoder per channel — turn it to set the channel level. This is your primary level control for the stereo input pair.</span>
         </div>
-        <div>
-          <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
-            <span style="font-family:var(--mono);font-size:11px;color:var(--text2)">Target zone (−12 to −6 dBFS)</span>
-            <span style="font-family:var(--mono);font-size:11px;color:var(--accent)">✓ good</span>
-          </div>
-          <div class="meter-bar"><div class="meter-fill" style="width:72%;background:var(--accent)"></div></div>
+        <div style="display:grid;grid-template-columns:160px 1fr;gap:12px;align-items:start;">
+          <span style="font-family:var(--mono);font-size:12px;font-weight:500;color:var(--amber)">Signal LED</span>
+          <span style="font-size:13px;color:var(--text2);font-weight:300;">Lights up when signal is present on that channel. A quick check that the L6 is receiving your modular output.</span>
         </div>
-        <div>
-          <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
-            <span style="font-family:var(--mono);font-size:11px;color:var(--text2)">Clipping (0 dBFS)</span>
-            <span style="font-family:var(--mono);font-size:11px;color:var(--red)">reduce gain</span>
-          </div>
-          <div class="meter-bar"><div class="meter-fill" style="width:100%;background:var(--red)"></div></div>
+        <div style="display:grid;grid-template-columns:160px 1fr;gap:12px;align-items:start;">
+          <span style="font-family:var(--mono);font-size:12px;font-weight:500;color:var(--amber)">Stereo LED bar meter</span>
+          <span style="font-size:13px;color:var(--text2);font-weight:300;">Located on the right side between the master output jacks and the Master knob. Shows the master bus level — your main metering reference.</span>
+        </div>
+        <div style="display:grid;grid-template-columns:160px 1fr;gap:12px;align-items:start;">
+          <span style="font-family:var(--mono);font-size:12px;font-weight:500;color:var(--amber)">Master knob</span>
+          <span style="font-size:13px;color:var(--text2);font-weight:300;">Fixed-position knob (not an encoder) that controls the overall output level to your main outputs. Set this to a comfortable level for the Apollo's inputs — it does not affect what is recorded to the SD card.</span>
+        </div>
+        <div style="display:grid;grid-template-columns:160px 1fr;gap:12px;align-items:start;">
+          <span style="font-family:var(--mono);font-size:12px;font-weight:500;color:var(--amber)">Comp button</span>
+          <span style="font-size:13px;color:var(--text2);font-weight:300;">One-button master bus compressor with no adjustable parameters — on or off only. Leave this off when gain staging; it can mask level problems and makes it harder to set accurate levels downstream.</span>
         </div>
       </div>
     </div>
@@ -862,29 +861,34 @@
     <ol class="steps-list">
       <li>
         <span class="step-num">1</span>
-        <span class="step-text">Connect your line out module's stereo output to the <strong>stereo line input</strong> on the Zoom L6.</span>
+        <span class="step-text">Connect your line out module's stereo output to one of the <strong>stereo ¼" line inputs</strong> on the L6 (inputs 3–6 are stereo pairs).</span>
       </li>
       <li>
         <span class="step-num">2</span>
-        <span class="step-text">Play your patch and watch the <strong>input channel meter</strong> on the L6.</span>
+        <span class="step-text">Play your patch and confirm the <strong>Signal LED</strong> lights up on that channel. If it doesn't, check your cables and the line out module's output.</span>
       </li>
       <li>
         <span class="step-num">3</span>
-        <span class="step-text">Adjust the <strong>input trim (gain knob)</strong> on the stereo channel so peaks land between <strong>−12 and −6 dBFS</strong> — the green/yellow region on the meter.</span>
+        <span class="step-text">Watch the <strong>stereo LED bar meter</strong> on the right side of the unit while your patch plays. Turn the channel's <strong>rotary encoder</strong> to bring the level to a healthy reading — active but not peaking at the top of the meter.</span>
       </li>
       <li>
         <span class="step-num">4</span>
-        <span class="step-text">Set the <strong>channel fader to unity</strong> (the 0 or U position). Do not use the fader to compensate for a weak signal — fix it upstream.</span>
+        <span class="step-text">Make sure the <strong>Comp button is off</strong> (not lit). You want a transparent signal passing through to the Apollo, not a compressed one.</span>
       </li>
       <li>
         <span class="step-num">5</span>
-        <span class="step-text">Set the <strong>master output fader to unity</strong> as well and confirm the output meters match what you expect.</span>
+        <span class="step-text">Set the <strong>Master knob</strong> so the output level feeding the Apollo is in a good range. Watch the Apollo's input meter in UA Console — aim for peaks around <strong>−12 to −6 dBFS</strong> there. Adjust the Master knob up or down to land in that range.</span>
       </li>
     </ol>
 
+    <div class="callout callout-important">
+      <span class="callout-icon">Note</span>
+      <span class="callout-text">The L6's 32-bit float architecture means the device itself won't clip internally, but the Master knob controls the analog output level going to the Apollo. If that output is too hot, the Apollo's inputs can still clip. Use the Master knob and the Apollo's input meter together to set the right level.</span>
+    </div>
+
     <div class="callout callout-warning">
       <span class="callout-icon">Heads up</span>
-      <span class="callout-text">Leave headroom for dynamics. Modular synthesis can produce sudden loud transients that your average level won't predict. Keeping peaks at −12 to −6 dBFS means a sudden spike will reach around −6 dBFS rather than clipping at 0.</span>
+      <span class="callout-text">The stereo line inputs on the L6 have a maximum input level of +9 dBu — lower than the XLR/combo inputs (+4 dBu max on XLR, +24 dBu on TRS). If your line out module is running very hot, this is the most likely point of analog clipping. Keep your modular output levels in check at Stage 1 and 2.</span>
     </div>
   </section>
 
@@ -967,7 +971,7 @@
       </div>
       <div class="workflow-step">
         <div class="workflow-step-num">4</div>
-        <div class="workflow-step-content">Watch the <strong>Zoom LiveTrak L6's input meter</strong>. Adjust the L6's input trim until the tone reads around <strong>−12 dBFS</strong>. Set channel and master faders to unity.</div>
+        <div class="workflow-step-content">Watch the <strong>stereo LED bar meter</strong> on the right side of the L6. Turn the channel's <strong>rotary encoder</strong> until you see a healthy level. Then adjust the <strong>Master knob</strong> while watching UA Console — aim for peaks around <strong>−12 to −6 dBFS</strong> at the Apollo's input.</div>
       </div>
       <div class="workflow-step">
         <div class="workflow-step-num">5</div>
@@ -998,7 +1002,7 @@
     <div class="trouble-grid">
       <div class="trouble-item">
         <div class="trouble-problem">Signal clipping on the Zoom L6 meters</div>
-        <div class="trouble-fix">Reduce the <strong>line out module's trim</strong>, or lower the Eurorack mixer's output level. Do not reduce the L6's input trim as a first resort — fix it upstream.</div>
+        <div class="trouble-fix">Reduce the <strong>line out module's trim</strong>, or lower the Eurorack mixer's output level. The L6's stereo line inputs max out at +9 dBu — if your signal is too hot, fix it at Stage 1 or 2, not by turning down the L6's channel encoder.</div>
       </div>
       <div class="trouble-item">
         <div class="trouble-problem">Signal too quiet at the Apollo</div>
